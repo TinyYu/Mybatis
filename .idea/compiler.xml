@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="day02_01mybatisCRUD" />
+        <module name="day03_01datasourceAndTx" />
+        <module name="how2j_demo5" />
+        <module name="day01_01mybatis" />
+        <module name="how2j_demo3" />
+        <module name="how2j_demo2" />
+        <module name="how2j_demo1" />
+        <module name="day01_03mybatis_design" />
+        <module name="how2j_demo4" />
+        <module name="day03_02dynamicSql" />
+        <module name="day04_02cache" />
+        <module name="day04_04annotatiOne2Many" />
+        <module name="day04_01lazy" />
+        <module name="day02_02mybatisDAO" />
+        <module name="dao04_03annotationMybatis" />
+        <module name="day01_02mybatis_annotation" />
+        <module name="day03_03one2many" />
+        <module name="day03_04many2many" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="dao04_03annotationMybatis" target="1.5" />
+      <module name="day01_01mybatis" target="1.5" />
+      <module name="day01_02mybatis_annotation" target="1.5" />
+      <module name="day01_03mybatis_dao" target="1.5" />
+      <module name="day01_03mybatis_design" target="1.5" />
+      <module name="day02_01mybatisCRUD" target="1.5" />
+      <module name="day02_02mybatisDAO" target="1.5" />
+      <module name="day03_01datasourceAndTx" target="1.5" />
+      <module name="day03_02dynamicSql" target="1.5" />
+      <module name="day03_03one2many" target="1.5" />
+      <module name="day03_04many2many" target="1.5" />
+      <module name="day03_05jndi" target="1.5" />
+      <module name="day04_01lazy" target="1.5" />
+      <module name="day04_02cache" target="1.5" />
+      <module name="day04_04annotatiOne2Many" target="1.5" />
+      <module name="how2j_demo1" target="1.5" />
+      <module name="how2j_demo2" target="1.5" />
+      <module name="how2j_demo3" target="1.5" />
+      <module name="how2j_demo4" target="1.5" />
+      <module name="how2j_demo5" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

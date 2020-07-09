@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.OrderDao">
+
+    <resultMap id="orderBean" type="Order">
+        <id property="id" column="oid"/>
+        <result property="code" column="code"/>
+        <collection property="orderItems" ofType="OrderItem">
+            <id property="id" column="oiid"/>
+            <result property="number" column="number"/>
+            <association property="product" javaType="Product">
+                <id property="id" column="pid"/>
+                <result property="name" column="pname"/>
+                <result property="price" column="price"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="listOrder" resultMap="orderBean">
+        select o.*,p.*,oi.*,o.id 'oid',oi.id 'oiid',p.id 'pid',p.name 'pname' from order_ o
+        left join order_item_ oi on oi.oid = o.id
+        left  join product_ p on oi.pid = p.id;
+    </select>
+
+    <select id="getOrder" resultMap="orderBean" parameterType="Integer">
+        select o.*,p.*,oi.*,o.id 'oid',oi.id 'oiid',p.id 'pid',p.name 'pname' from order_ o
+        left join order_item_ oi on oi.oid = o.id
+        left join product_ p on oi.pid = p.id
+        where o.id = #{id};
+    </select>
+
+    <delete id="deleteOrder" parameterType="Integer">
+        delete from order_ where id = #{id};
+        delete from order_item_ where oid = #{id};
+    </delete>
+</mapper>

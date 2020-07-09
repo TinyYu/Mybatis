@@ -1,0 +1,43 @@
+package com.ly.test;
+
+import com.ly.dao.UserDao;
+import com.ly.domain.User;
+import com.ly.mybist.io.Resources;
+import com.ly.mybist.sqlsession.SqlSession;
+import com.ly.mybist.sqlsession.SqlSessionFactory;
+import com.ly.mybist.sqlsession.SqlSessionFactoryBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+public class MyBatis {
+
+    /**
+     * 入门案例
+     */
+    public static void main(String[] args) throws IOException {
+        // 1. 读取配置文件
+        InputStream in = Resources.getResourceAsStream("SqlMaoConfig.xml");
+
+        // 2.创建工厂
+        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+        SqlSessionFactory factory = builder.build(in); // SqlSessionFactoryBuilder接收SqlMaoConfig.xml文件流,构建出SqlSessionFactory对象
+
+        // 3.使用工厂生产的SqlSession对象
+        SqlSession session = factory.openSession(); // SqlSessionFactory读取SqlMaoConfig.xml中连接数据库和mapper映射信息，用来生产出真正操作数据库的SqlSession对象
+
+        // 4.使用SqlSession创建Dao接口的代理对象
+        UserDao userDao = session.getMapper(UserDao.class);
+
+        // 5.使用代理对象执行方法
+        List<User> users = userDao.findAll();
+        for (User user : users){
+            System.out.println(user);
+        }
+
+        // 6.释放资源
+        session.close();
+        in.close();
+    }
+}

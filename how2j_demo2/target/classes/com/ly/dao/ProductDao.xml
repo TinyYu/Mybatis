@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.ProductDao">
+    <resultMap id="Product" type="product">
+        <id property="id" column="pid"/>
+        <result property="name" column="pname"/>
+        <result property="price" column="price"/>
+        <!-- 多对一关系 -->
+        <association property="categorys" javaType="Category">
+            <id property="id" column="cid"/>
+            <result property="name" column="cname"/>
+        </association>
+    </resultMap>
+
+    <!-- 查询全部 -->
+    <select id="listProduct" resultMap="Product">
+        select c.*,p.*,c.id 'cid',c.name 'cname',p.id 'pid',p.name 'pname' from category_ c left join  product_ p on c.id = p.cid;
+    </select>
+
+    <!-- 修改数据 -->
+    <update id="updateProductCid" parameterType="product">
+        update product_ set cid = #{cid} where id = #{id};
+    </update>
+
+    <!-- 查询指定id数据 -->
+    <select id="listProductId" resultMap="Product" parameterType="Integer">
+        select c.*,p.*,c.id 'cid',c.name 'cname',p.id 'pid',p.name 'pname' from category_ c left join  product_ p on c.id = p.cid where p.id = #{id};
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org//dtd//mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.UserDao">
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.ly.domain.User">
+        select * from user;
+    </select>
+
+
+    <!-- 根据id查询用户信息 -->
+    <select id="findById" parameterType="Integer" resultType="com.ly.domain.User">
+        select * from user where id=#{id};
+    </select>
+
+    <!-- 根据名称模糊查询用户信息 -->
+    <select id="findByName" parameterType="String" resultType="com.ly.domain.User">
+        select * from user where username like #{username};
+    </select>
+
+    <!-- 根据QueryVo查询中的条件查询用户 -->
+    <select id="findUserByVo" parameterType="com.ly.domain.QueryVo" resultType="com.ly.domain.User">
+        select * from user where username like #{user.username};
+    </select>
+
+    <!-- 根据条件查询 -->
+    <select id="findUserByCondition" resultType="com.ly.domain.User">
+        select * from user where 1=1
+        <if test="username != null">
+            username = #{username}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.UserDao">
+    <!-- 开启user支持二级缓存 -->
+    <cache/>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="user">
+        select * from user
+    </select>
+
+
+    <!-- 根据id查询用户信息 -->
+    <select id="findById" parameterType="Integer" resultType="user">
+        select * from user where id = #{id};
+    </select>
+
+    <!-- 跟新用户信息 -->
+   <update id="updateUser" parameterType="user" flushCache="true">
+        update user set  username = #{username},address = #{address} where id = #{id}
+   </update>
+</mapper>

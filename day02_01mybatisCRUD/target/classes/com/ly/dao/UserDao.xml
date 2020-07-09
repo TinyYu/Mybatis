@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org//dtd//mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.UserDao">
+
+    <!-- 如果实体类属性名和数据库列名不一致 -->
+    <!--
+        配置 查询结果的列名和实体类的属性名的对应关系
+            id : 唯一表示(可以任意值)
+            type : 返回时对应的实体类
+    -->
+    <resultMap id="userMap" type="com.ly.domain.User2">
+        <!-- 配置主键字段的对应 -->
+        <id property="userId" column="id"></id>
+        <!-- 非主键字段的对应 -->
+        <result property="userName" column="username"></result>
+        <result property="userAddress" column="address"></result>
+        <result property="userSex" column="sex"></result>
+        <result property="userBirthday" column="birthday"></result>
+    </resultMap>
+    <!-- 查询所有 -->
+    <select id="findAll2" resultMap="userMap">
+        select * from user;
+    </select>
+
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="user">
+        select * from user;
+    </select>
+
+    <!-- 保存用户 -->
+    <insert id="saveUser" parameterType="user">
+        insert into user(username,address,sex,birthday) values (#{username},#{address},#{sex},#{birthday});
+        <!--
+            配置插入操作后，获取插入数据的id
+                keyProperty : 表示要返回的值名称
+                keyColumn : 数据库的id的值
+                resultType : 表示要返回的值的类型
+                order : 取值为AFTER代表插入后的行为
+         -->
+        <selectKey keyProperty="id" keyColumn="id" resultType="Integer" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+    </insert>
+
+    <!-- 跟新用户 -->
+    <update id="updateUser" parameterType="user">
+        update user set username=#{username},address=#{address},sex=#{sex},birthday=#{birthday} where id=#{id};
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterType="Integer">
+        delete from user where id=#{id};
+    </delete>
+
+    <!-- 根据id查询用户信息 -->
+    <select id="findById" parameterType="Integer" resultType="user">
+        select * from user where id=#{id};
+    </select>
+
+    <!-- 根据名称模糊查询用户信息 -->
+    <select id="findByName" parameterType="String" resultType="user">
+        select * from user where username like #{username};
+    </select>
+
+    <!-- 获取用户的总记录条数 -->
+    <select id="findTotal" resultType="int">
+        select count(*) from user;
+    </select>
+
+
+    <!-- 根据QueryVo查询中的条件查询用户 -->
+    <select id="findUserByVo" parameterType="com.ly.domain.QueryVo" resultType="user">
+        select * from user where username like #{user.username};
+    </select>
+</mapper>
