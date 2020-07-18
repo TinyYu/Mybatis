@@ -9,13 +9,17 @@
         <module name="day02_01mybatisCRUD" />
         <module name="day03_01datasourceAndTx" />
         <module name="how2j_demo5" />
-        <module name="day01_01mybatis" />
+        <module name="how2j_demo4" />
         <module name="how2j_demo3" />
         <module name="how2j_demo2" />
         <module name="how2j_demo1" />
+        <module name="day01_01mybatis" />
         <module name="day01_03mybatis_design" />
-        <module name="how2j_demo4" />
+        <module name="mybatis_day01" />
         <module name="day03_02dynamicSql" />
+        <module name="mybatis_day04" />
+        <module name="mybatis_day03" />
+        <module name="mybatis_day02" />
         <module name="day04_02cache" />
         <module name="day04_04annotatiOne2Many" />
         <module name="day04_01lazy" />
@@ -23,6 +27,7 @@
         <module name="dao04_03annotationMybatis" />
         <module name="day01_02mybatis_annotation" />
         <module name="day03_03one2many" />
+        <module name="mybatis_day05" />
         <module name="day03_04many2many" />
       </profile>
     </annotationProcessing>
@@ -47,6 +52,11 @@
       <module name="how2j_demo3" target="1.5" />
       <module name="how2j_demo4" target="1.5" />
       <module name="how2j_demo5" target="1.5" />
+      <module name="mybatis_day01" target="1.5" />
+      <module name="mybatis_day02" target="1.5" />
+      <module name="mybatis_day03" target="1.5" />
+      <module name="mybatis_day04" target="1.5" />
+      <module name="mybatis_day05" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.StudentDAO">
+
+<!--    &lt;!&ndash;-->
+<!--        1. 查询所有的学生信息-->
+<!--        2. 根据查询出来的学生的tid，查询对应的老师-->
+<!--    &ndash;&gt;-->
+<!--    <select id="getListStudent" resultMap="studentMap">-->
+<!--        select * from student-->
+<!--    </select>-->
+<!--    -->
+<!--    <resultMap id="studentMap" type="student">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="name" column="name"/>-->
+<!--        &lt;!&ndash; 复杂属性，需要单独处理 对象: association (一般适用于多对一情况下) 集合: collection (一般适用于一对多情况下) &ndash;&gt;-->
+<!--        <association property="teacher" column="tid" javaType="teacher" select="getTeacherById"></association>-->
+<!--    </resultMap>-->
+<!--    -->
+<!--    <select id="getTeacherById" resultType="teacher">-->
+<!--        select * from teacher where id = #{tid}-->
+<!--    </select>-->
+
+    <!-- 按照结果嵌套处理 -->
+    <select id="getListStudent" resultMap="studentMap">
+        select s.*,t.id tid,t.name tname from student s,teacher t where s.tid = t.id
+    </select>
+
+    <resultMap id="studentMap" type="student">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <association property="teacher" javaType="teacher">
+            <id property="id" column="tid"/>
+            <result property="name" column="tname"/>
+        </association>
+    </resultMap>
+</mapper>

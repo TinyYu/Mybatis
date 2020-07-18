@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.TeacherDAO">
+
+    <!-- 查询全部 -->
+    <select id="getListTeacher" resultMap="teacherMap">
+        select t.*,s.id sid,s.name sname from teacher t,student s where t.id = s.tid
+    </select>
+
+    <resultMap id="teacherMap" type="teacher">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <!-- 复杂属性，需要单独处理 对象: association (一般适用于多对一情况下) 集合: collection (一般适用于一对多情况下)
+             集合中的泛型信息，使用ofType获取
+         -->
+        <collection property="students" ofType="student">
+            <id property="id" column="sid"/>
+            <result property="name" column="sname"/>
+            <result property="tid" column="tid"/>
+        </collection>
+    </resultMap>
+
+    <!-- 根据id查询 -->
+    <select id="getTeacherById" resultMap="teacherMap">
+        select t.*,s.id sid,s.name sname from teacher t,student s where t.id = s.tid and t.id = #{id}
+    </select>
+</mapper>

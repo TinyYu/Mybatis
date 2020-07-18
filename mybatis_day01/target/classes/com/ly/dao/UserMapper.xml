@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 绑定对应的Dao/Mapper接口 -->
+<mapper namespace="com.ly.dao.UsercDao">
+    <!-- 查询语句 -->
+    <select id="getUserList" resultType="com.ly.pojo.Userc">
+       select * from userc
+    </select>
+
+    <!-- 根据id查询
+        resultType ：返回类型
+        parameterType : 传入参数类型
+    -->
+    <select id="getUsercById" resultType="com.ly.pojo.Userc" parameterType="Integer">
+        select * from userc where id = #{id}
+    </select>
+
+    <!-- 保存数据 -->
+    <insert id="insertUserc" parameterType="com.ly.pojo.Userc">
+        insert into userc(id,name,pwd) values (#{id},#{name},#{pwd})
+    </insert>
+
+    <!-- 使用Map作为参数
+        传递Map里面的key
+     -->
+    <insert id="insertUserc2" parameterType="map">
+        insert into userc(id, name, pwd) values (#{userId},#{userName},#{userPwd})
+    </insert>
+
+
+    <!-- 修改数据 -->
+    <update id="updateUserc" parameterType="com.ly.pojo.Userc">
+        update userc set name = #{name},pwd = #{pwd} where id = #{id}
+    </update>
+
+    <!-- 删除数据 -->
+    <delete id="deleteUserc" parameterType="Integer">
+        delete from userc where id = #{id}
+    </delete>
+
+    <!-- 模糊查询 -->
+    <select id="getUsercBy" resultType="com.ly.pojo.Userc" parameterType="String">
+        select * from userc where name like #{name}
+    </select>
+</mapper>

@@ -24,6 +24,11 @@
         <option value="$PROJECT_DIR$/day04_02cache/pom.xml" />
         <option value="$PROJECT_DIR$/dao04_03annotationMybatis/pom.xml" />
         <option value="$PROJECT_DIR$/day04_04annotatiOne2Many/pom.xml" />
+        <option value="$PROJECT_DIR$/mybatis_day01/pom.xml" />
+        <option value="$PROJECT_DIR$/mybatis_day02/pom.xml" />
+        <option value="$PROJECT_DIR$/mybatis_day03/pom.xml" />
+        <option value="$PROJECT_DIR$/mybatis_day04/pom.xml" />
+        <option value="$PROJECT_DIR$/mybatis_day05/pom.xml" />
       </list>
     </option>
   </component>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.dao.UserDAO">
+
+    <!-- 结果集映射 -->
+    <resultMap id="userMap" type="user">
+        <!-- column: 列名 property: 属性名-->
+        <result column="id" property="id"/>
+        <result column="username" property="userName"/>
+        <result column="sex" property="userSex"/>
+        <result column="birthday" property="userBirthday"/>
+        <result column="address" property="userAddress"/>
+    </resultMap>
+
+    <select id="getListUser" resultMap="userMap">
+        select * from user
+    </select>
+
+    <select id="getListUserByLimit" parameterType="map" resultMap="userMap">
+        select * from user limit #{startIndex},#{pageSize}
+    </select>
+
+    <select id="getListUserByRowBounds" resultMap="userMap">
+        select * from user
+    </select>
+</mapper>

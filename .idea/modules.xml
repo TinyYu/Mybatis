@@ -21,6 +21,11 @@
       <module fileurl="file://$PROJECT_DIR$/how2j_demo4/how2j_demo4.iml" filepath="$PROJECT_DIR$/how2j_demo4/how2j_demo4.iml" />
       <module fileurl="file://$PROJECT_DIR$/how2j_demo5/how2j_demo5.iml" filepath="$PROJECT_DIR$/how2j_demo5/how2j_demo5.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/mybatis.iml" filepath="$PROJECT_DIR$/.idea/mybatis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis_day01/mybatis_day01.iml" filepath="$PROJECT_DIR$/mybatis_day01/mybatis_day01.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis_day02/mybatis_day02.iml" filepath="$PROJECT_DIR$/mybatis_day02/mybatis_day02.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis_day03/mybatis_day03.iml" filepath="$PROJECT_DIR$/mybatis_day03/mybatis_day03.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis_day04/mybatis_day04.iml" filepath="$PROJECT_DIR$/mybatis_day04/mybatis_day04.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis_day05/mybatis_day05.iml" filepath="$PROJECT_DIR$/mybatis_day05/mybatis_day05.iml" />
     </modules>
   </component>
 </project>
