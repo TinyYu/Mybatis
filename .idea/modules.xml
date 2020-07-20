@@ -26,6 +26,8 @@
       <module fileurl="file://$PROJECT_DIR$/mybatis_day03/mybatis_day03.iml" filepath="$PROJECT_DIR$/mybatis_day03/mybatis_day03.iml" />
       <module fileurl="file://$PROJECT_DIR$/mybatis_day04/mybatis_day04.iml" filepath="$PROJECT_DIR$/mybatis_day04/mybatis_day04.iml" />
       <module fileurl="file://$PROJECT_DIR$/mybatis_day05/mybatis_day05.iml" filepath="$PROJECT_DIR$/mybatis_day05/mybatis_day05.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis_day06/mybatis_day06.iml" filepath="$PROJECT_DIR$/mybatis_day06/mybatis_day06.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mybatis_day07/mybatis_day07.iml" filepath="$PROJECT_DIR$/mybatis_day07/mybatis_day07.iml" />
     </modules>
   </component>
 </project>

@@ -1593,3 +1593,498 @@ select * from user limit 3; [0,n] // 从0开始查询3条数据
     </select>
 </mapper>
 ```
+
+## 11.动态SQL
+
+根据不同的条件生成不同的SQL语句
+
+### 11.1 环境搭建
+
+~~~sql
+create table blog(
+	id varchar(50) not null comment '博客id',
+	title varchar(100) not null comment '博客标题',
+	author varchar(30) not null comment '博客作者',
+	create_time datetime not null comment '创建时间',
+	views int not null comment '浏览量'
+)engine=innodb default charset=utf8
+~~~
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <properties resource="db.properties"/>
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <typeAliases>
+        <package name="com.ly.pojo"/>
+    </typeAliases>
+
+    <environments default="mybatis">
+        <environment id="mybatis">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${dirver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <package name="com.ly.dao"/>
+    </mappers>
+</configuration>
+```
+
+```java
+package com.ly.utils;
+
+import org.junit.Test;
+
+import java.util.UUID;
+
+public class IDUtils {
+
+    public static String getId(){
+        return UUID.randomUUID().toString().replace("-","");
+    }
+
+    @Test
+    public void test(){
+        System.out.println(IDUtils.getId());
+    }
+
+}
+```
+
+```java
+package com.ly.utils;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class MybatisUtils {
+    private static InputStream inputStream;
+    private static SqlSessionFactory sqlSessionFactory;
+    static {
+        try {
+            inputStream = Resources.getResourceAsStream("mybatis-config.xml");
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static SqlSession getSqlSession(){
+        return sqlSessionFactory.openSession();
+    }
+}
+```
+
+```java
+package com.ly.pojo;
+
+import java.util.Date;
+
+public class Blog {
+    private String id;
+    private String title;
+    private String author;
+    private Date createTime;
+    private Integer views;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public Integer getViews() {
+        return views;
+    }
+
+    public void setViews(Integer views) {
+        this.views = views;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", createTime=" + createTime +
+                ", views=" + views +
+                '}';
+    }
+}
+```
+
+```java
+package com.ly.dao;
+
+import com.ly.pojo.Blog;
+
+public interface BlogDAO {
+    // 插入数据
+    void addBook(Blog blog);
+}
+```
+
+### 11.2 IF
+
+```java
+// 查询博客
+List<Blog> queryBlogIF(Map map);
+```
+
+```xml
+<select id="queryBlogIF" parameterType="map" resultType="blog">
+    select * from blog where 1=1
+    <if test="title != null">
+        and title = #{title}
+    </if>
+    <if test="author != null">
+        and author = #{author}
+    </if>
+</select>
+```
+
+```java
+@Test
+public void queryBlogIF(){
+    HashMap map = new HashMap();
+
+    map.put("title","Mybatis如此简单");
+    map.put("author","狂神说");
+
+    List<Blog> blogs = blogDAO.queryBlogIF(map);
+    for (Blog blog : blogs) {
+        System.out.println(blog);
+    }
+}
+```
+
+### 11.3 choose(when,otherwise)
+
+```xml
+<!-- choose相当于java中的switch -->
+    <select id="queryBlogChoose" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <choose>
+                <when test="title != null">
+                    title = #{title}
+                </when>
+                <when test="author != author">
+                   author = #{author}
+                </when>
+                <otherwise>
+                   views = #{views}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+```
+
+### 11.4 trim(where,set)
+
+*where* 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，*where* 元素也会将它们去除。
+
+```xml
+<select id="queryBlogIF" parameterType="map" resultType="blog">
+    select * from blog
+    <where>
+        <if test="title != null">
+            and title = #{title}
+        </if>
+        <if test="author != null">
+            and author = #{author}
+        </if>
+    </where>
+</select>
+```
+
+*set* 元素会动态地在行首插入 SET 关键字，并会删掉额外的逗号
+
+```xml
+<update id="updateBlog" parameterType="map">
+    update blog
+    <set>
+        <if test="title != null">
+            title = #{title},
+        </if>
+        <if test="author != null">
+            author = #{author},
+        </if>
+    </set>
+    where id = #{id}
+</update>
+```
+
+### 11.5 SQL片段
+
+1. 使用SQL标签抽取公共的部分
+
+   ```xml
+   <sql id="if-title-author">
+       <if test="title != null">
+           and title = #{title}
+       </if>
+       <if test="author != null">
+           and author = #{author}
+       </if>
+   </sql>
+   ```
+
+2. 在需要使用的地方使用include标签引用即可
+
+   ```xml
+   <select id="queryBlogIF" parameterType="map" resultType="blog">
+       select * from blog
+       <where>
+           <include refid="if-title-author"/>
+       </where>
+   </select>
+   ```
+
+3. 注意事项:
+
+   1. 最好基于单表来定义SQL片段
+   2. 不要存在where,set标签
+
+### 11.6 Foreach
+
+```java
+// 查询id为1,2,3记录的博客
+List<Blog> queryBlogForeach(Map map);
+```
+
+```xml
+<!--
+    select * from where (id = ? or id = ? or id = ?)
+-->
+<select id="queryBlogForeach" parameterType="map" resultType="blog">
+    select * from blog
+    <where>
+        <foreach collection="ids" item="id" open="and (" close=")" separator="or">
+            id = #{id}
+        </foreach>
+    </where>
+</select>
+```
+
+```java
+@Test
+public void queryBlogForeach(){
+    HashMap map = new HashMap();
+
+    ArrayList<String> strings = new ArrayList<String>();
+    strings.add("1");
+    strings.add("2");
+    strings.add("3");
+    map.put("ids",strings);
+    List<Blog> blogs = blogDAO.queryBlogForeach(map);
+    for (Blog blog : blogs) {
+        System.out.println(blog);
+    }
+}
+```
+
+### 总结
+
+所谓的动态SQL，本质还是SQL语句，只是可以在SQL层面，去执行一个逻辑代码
+
+动态SQL就是在拼接SQL语句,只要确保SQL的正确性，按照SQL的格式，去排列组合
+
+## 12.缓存
+
+### 12.1 简介
+
+1. 什么是缓存
+   + 存在内存中的临时数据
+   + 将用户经常查询的数据放在缓存（内存）中，用户去查询数据就不用从硬盘（关系型数据库数据文件）查询，从缓存中查询，提高查询效率，解决高并发系统的性能问题
+2. 为什么使用缓存
+   + 减少和数据库的交互次数，减少系统开销，提高系统效率
+3. 什么样的数据可以使用缓存
+   + 经常查询并且不经常改变的数据
+
+### 12.2 MyBatis缓存
+
++ mybatis包含一个非常强大的查询缓存特性，它可以非常方便地定制和配置缓存。
++ mybatis系统中默认定制了两个缓存: **一级缓存**和**二级缓存**
+  + 默认情况下，只有**一级缓存**开启。(SqlSession级别的缓存，也称为本地缓存)
+  + 二级缓存需要手动开启和配置，它基于namespace级别
+  + 为了提高扩展性，mybatis定义了缓存接口Cache。可以通过Cache接口来自定义二级缓存
+
+### 12.3 一级缓存
+
++ 一级缓存也叫本地缓存
+  + 于数据库同一次会话起键查询到的数据会放在本地缓存中。
+  + 以后如果需要获取相同的数据，直接从缓存中拿，没必要再去查询数据库
+
+测试步骤
+
+1. 开启日志
+
+   ```xml
+   <setting name="logImpl" value="STDOUT_LOGGING"/>
+   ```
+
+2. 在同一个SqlSession中查询两次相同的记录
+
+   ```java
+   @Test
+   public void queryBlogIF(){
+       HashMap map = new HashMap();
+   
+       map.put("title","Mybatis如此简单");
+       map.put("author","狂神说");
+   
+       List<Blog> blogs = blogDAO.queryBlogIF(map);
+       for (Blog blog : blogs) {
+           System.out.println(blog);
+       }
+   
+       map.put("title","Mybatis如此简单");
+       map.put("author","狂神说");
+   
+       List<Blog> blogs1 = blogDAO.queryBlogIF(map);
+       for (Blog blog : blogs1) {
+           System.out.println(blog);
+       }
+   
+       System.out.println(blogs == blogs1);
+   }
+   ```
+
+3. 查看日志
+
+   ![image-20200719161647201](C:\Users\22978\AppData\Roaming\Typora\typora-user-images\image-20200719161647201.png)
+
+#### 12.3.1 缓存失效
+
+1. 查询不同的记录
+2. 执行update、insert、delete语句刷新缓存
+   + 增删改操作可能会改变原来的数据，所以一定会刷新缓存
+3. 查询不同的Mapper.xml
+4. 手动清理缓存sqlSession.clearCache()
+
+### 12.4 二级缓存
+
++ 二级缓存也叫全局缓存
++ 基于namespace级别的缓存，一个命名空间，对应一个二级缓存
++ 工作机制
+  + 一个会话查询一条数据，这个数据就会被放在当前会话的一级缓存中
+  + 如果当前会话关闭了，这个会话对应的一级缓存就没了，将一级缓存保存到二级缓存中
+  + 新的会话查询信息就可以从二级缓存中获取内容
+  + 不同的Mapper查出的数据会放在自己对应的缓存中
+
+测试步骤
+
+1. 开启全局缓存
+
+   ```xml
+   <setting name="cachedEnabled" value="true"/>
+   ```
+
+2. 在要使用二级缓存的Mapper中开启
+
+   ```xml
+   <!--
+       在当前Mapper.xml中使用二级缓存
+       eviction="FIFO" ： 使用FIFO策略
+       flushInterval="60000" : 每隔60秒刷新缓存
+       size="512" : 最多512条缓存
+       readOnly="true"
+    -->
+   <cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true"/>
+   ```
+
+3. 测试
+
+   ```java
+   @Test
+   public void queryBlogIF(){
+       HashMap map = new HashMap();
+   
+       map.put("title","Mybatis如此简单");
+       map.put("author","狂神说");
+       List<Blog> blogs = blogDAO.queryBlogIF(map);
+       for (Blog blog : blogs) {
+           System.out.println(blog);
+       }
+       sqlSession.close();
+   
+       SqlSession sqlSession1 = MybatisUtils.getSqlSession();
+       BlogDAO blogDAO2 = sqlSession1.getMapper(BlogDAO.class);
+       map.put("title","Mybatis如此简单");
+       map.put("author","狂神说");
+       List<Blog> blogs1 = blogDAO2.queryBlogIF(map);
+       for (Blog blog : blogs1) {
+           System.out.println(blog);
+       }
+       System.out.println(blogs == blogs1);
+      qlSession1.close();
+   }
+   ```
+
+注意: 实例类需要序列化
+
+#### 小结
+
++ 只要开启了二级缓存，在同一个Mapper下就有效
+
++ 所有的数据都会先放在一个一级缓存中
+
++ 只有当会话提交，或者关闭了，才会将一级缓存提交到二级缓存中
+
+  ![未命名文件](F:\lib\未命名文件.jpg)
+
